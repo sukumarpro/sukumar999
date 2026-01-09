@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Priynti Ray Priti by Sukumar</title>
+    <!-- ফন্ট এবং আইকন লাইব্রেরি -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Hind+Siliguri:wght@300;400;600&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- ভেরিয়েবল সেটআপ --- */
+        :root {
+            --primary-color: #ff007f;
+            --secondary-color: #5e17eb;
+            --gold: #FFD700;
+            --bg-gradient: linear-gradient(135deg, #1a0b2e 0%, #2c003e 50%, #4a192c 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-color: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', 'Hind Siliguri', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* --- ব্যাকগ্রাউন্ড ক্যানভাস (আতশবাজি) --- */
+        #canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; pointer-events: none;
+        }
+
+        /* --- ইন্ট্রো স্ক্রিন (গিফট বক্স) --- */
+        #intro-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-gradient);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .gift-box {
+            cursor: pointer;
+            text-align: center;
+            transition: transform 0.3s;
+            animation: bounce 2s infinite;
+        }
+
+        .gift-box:hover { transform: scale(1.1); }
+
+        .gift-icon {
+            font-size: 5rem;
+            color: var(--gold);
+            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.6));
+            margin-bottom: 20px;
+        }
+
+        .click-me-text {
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            color: #fff;
+            font-weight: 600;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        /* --- মেইন কন্টেইনার --- */
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 800px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            text-align: center;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s ease;
+            display: none; 
+        }
+
+        .container.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- ফটো এবং নাম --- */
+        .photo-frame {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            border: 5px solid var(--gold);
+            box-shadow: 0 0 25px var(--primary-color);
+            overflow: hidden;
+            transition: transform 0.5s;
+            background: #fff;
+        }
+
+        .photo-frame:hover { transform: rotate(5deg) scale(1.05); }
+
+        .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+
+        h1.title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3.5rem;
+            color: var(--gold);
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            line-height: 1.2;
+        }
+
+        .subtitle { font-size: 1.2rem; margin-bottom: 30px; color: #e0e0e0; }
+
+        /* --- মেসেজ কার্ড --- */
+        .message-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            border-left: 4px solid var(--primary-color);
+            text-align: left;
+            position: relative;
+            min-height: 120px;
+        }
+
+        .typewriter-text::after {
+            content: '|';
+            animation: blink 0.7s infinite;
+        }
+        
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* --- সোশ্যাল বাটন (ফেসবুক লোগো সহ) --- */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .fb-btn {
+            text-decoration: none;
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px 25px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .fb-btn i { color: #1877F2; font-size: 1.4rem; } /* Facebook Brand Color */
+        
+        .fb-btn:hover {
+            background: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 0, 127, 0.4);
+            border-color: var(--primary-color);
+        }
+        .fb-btn:hover i { color: white; }
+
+        /* --- কেক সেকশন --- */
+        .cake-container {
+            margin: 30px 0;
+            position: relative;
+            height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .cake {
+            width: 150px;
+            height: 80px;
+            background: #6c5ce7;
+            border-radius: 10px 10px 0 0;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .cake::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: #a29bfe;
+            border-radius: 10px;
+            z-index: 1;
+        }
+
+        .candle {
+            width: 12px;
+            height: 40px;
+            background: repeating-linear-gradient(45deg, #ff7675, #ff7675 5px, #fff 5px, #fff 10px);
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+            z-index: 0;
+        }
+
+        .flame {
+            width: 15px;
+            height: 25px;
+            background: radial-gradient(circle, #ffd700 0%, #ff7675 100%);
+            border-radius: 50% 50% 20% 20%;
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: flicker 0.5s infinite alternate;
+            box-shadow: 0 0 10px #ffd700;
+            cursor: pointer;
+            transition: opacity 0.5s;
+        }
+
+        .flame:hover, .flame.blown {
+            opacity: 0;
+            transform: translateX(-50%) scale(0.5);
+        }
+
+        .instruction {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #fab1a0;
+            opacity: 0.8;
+        }
+
+        /* --- মিউজিক কন্ট্রোল --- */
+        .music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 50;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+            transition: all 0.3s;
+        }
+
+        .music-control:hover {
+            transform: scale(1.1);
+            background: var(--gold);
+            color: #2c003e;
+        }
+
+        /* --- ফুটার সিগনেচার --- */
+        .signature {
+            margin-top: 20px;
+            font-size: 1rem;
+            color: #ccc;
+        }
+        .signature span {
+            color: var(--gold);
+            font-weight: bold;
+            font-size: 1.2rem;
+            display: block;
+            margin-top: 5px;
+        }
+
+        /* --- অ্যানিমেশন --- */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-20px);}
+            60% {transform: translateY(-10px);}
+        }
+
+        @keyframes flicker {
+            0% { transform: translateX(-50%) scale(1); opacity: 1; }
+            100% { transform: translateX(-50%) scale(1.1); opacity: 0.8; }
+        }
+
+        /* রেসপন্সিভ */
+        @media (max-width: 600px) {
+            h1.title { font-size: 2.8rem; }
+            .container { width: 95%; padding: 20px; }
+            .gift-icon { font-size: 4rem; }
+            .fb-btn { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ব্যাকগ্রাউন্ড ক্যানভাস -->
+    <canvas id="canvas"></canvas>
+
+    <!-- ইন্ট্রো স্ক্রিন (গিফট বক্স) -->
+    <div id="intro-screen">
+        <div class="gift-box" onclick="startCelebration()">
+            <div class="gift-icon">🎁</div>
+            <div class="click-me-text">উপহারটি খুলুন</div>
+        </div>
+    </div>
+
+    <!-- মেইন কন্টেন্ট -->
+    <main class="container" id="main-content">
+        <!-- ফটো সেকশন -->
+        <div class="photo-frame">
+            <!-- এখানে আপনার দেওয়া ছবিটি বসানো হয়েছে -->
+            <img src="https://z-cdn-media.chatglm.cn/files/43cbd250-74e2-43f3-84da-f836e700edc8.png?auth_key=1867947445-c3dd5f86762e466da18f338aa860482a-0-12b25630179781967249448b87b268aa" alt="Priynti Ray Priti">
+        </div>
+
+        <!-- টাইটেল এবং নাম -->
+        <h1 class="title">Priynti Ray Priti</h1>
+        <p class="subtitle">Happy Birthday! শুভ জন্মদিন</p>
+
+        <!-- মেসেজ কার্ড (অটোমেটিক টাইপ হবে) -->
+        <div class="message-card">
+            <div class="typewriter-text" id="typewriter"></div>
+        </div>
+
+        <!-- সোশ্যাল লিংকস (ফেসবুক লোগো সহ) -->
+        <div class="social-links">
+            <a href="https://www.facebook.com/profile.php?id=61571799207862" target="_blank" class="fb-btn">
+                <i class="fab fa-facebook"></i> Priynti Ray Priti
+            </a>
+            <a href="https://www.facebook.com/share/1CDoFLB4p3/" target="_blank" class="fb-btn">
+                <i class="fab fa-facebook"></i> Sukumar Roy
+            </a>
+        </div>
+
+        <!-- কেক সেকশন -->
+        <div class="cake-container">
+            <div class="cake">
+                <div class="candle">
+                    <div class="flame" id="flame" title="মোমবাতি নিভাতে ক্লিক করুন"></div>
+                </div>
+            </div>
+        </div>
+        <p class="instruction" id="instruction-text">ইচ্ছা করে মোমবাতিটি নিভিয়ে ফেলুন 👆</p>
+
+        <div class="signature">
+            With lots of love
+            <span>Sukumar Roy</span>
+        </div>
+    </main>
+
+    <!-- মিউজিক প্লেয়ার (ফিক্সড লিংক এবং লোডিং এনহান্সড) -->
+    <!-- এই লিংকটি দ্রুত লোড হবে এবং ভলিউম সেট করা আছে -->
+    <audio id="bg-music" loop preload="auto">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- মিউজিক কন্ট্রোল বাটন -->
+    <div class="music-control" onclick="toggleMusic()">
+        <span id="music-icon">🔇</span>
+    </div>
+
+    <script>
+        // --- কনফিগারেশন এবং টেক্সট ---
+        const messageText = `প্রিয় প্রিয়াংতি রায় প্রীতি,
+
+জন্মদিনের অনেক অনেক শুভকামনা! 🎉
+আজকের এই বিশেষ দিনটি তোমার জীবনে অনেক আনন্দ বয়ে আনুক। তুমি যেন প্রতিটি মুহূর্ত হাসি মুখে উপভোগ করো। তোমার সব স্বপ্ন পূরণ হোক, এটাই আমার ছোট্ট প্রার্থনা।
+
+অনেক অনেক শুভকামনা রইলো। ❤️`;
+
+        // --- ইলিমেন্ট সিলেক্টর ---
+        const introScreen = document.getElementById('intro-screen');
+        const mainContent = document.getElementById('main-content');
+        const music = document.getElementById('bg-music');
+        const musicIcon = document.getElementById('music-icon');
+        const flame = document.getElementById('flame');
+        const instructionText = document.getElementById('instruction-text');
+        const typewriter = document.getElementById('typewriter');
+
+        // --- সেলিব্রেশন শুরু ফাংশন ---
+        function startCelebration() {
+            // ১. ইন্ট্রো স্ক্রিন বন্ধ করা
+            introScreen.style.opacity = '0';
+            setTimeout(() => {
+                introScreen.style.display = 'none';
+                
+                // ২. মেইন কন্টেন্ট শো করা
+                mainContent.style.display = 'block';
+                setTimeout(() => {
+                    mainContent.classList.add('active');
+                    startFireworks(); // আতশবাজি শুরু
+                    typeWriter(); // মেসেজ টাইপ শুরু
+                    
+                    // ৩. মিউজিক প্লে (ইমিডিয়েট এবং ফোর্সড)
+                    music.volume = 1.0; // ভলিউম ফুল করা হলো
+                    music.play().then(() => {
+                        musicIcon.textContent = '🔊';
+                        console.log("Music is playing");
+                    }).catch(error => {
+                        console.log("Audio autoplay blocked, user interaction required for music icon");
+                        musicIcon.textContent = '🎵'; 
+                    });
+
+                }, 100);
+            }, 1000);
+        }
+
+        // --- মিউজিক টগল ফাংশন ---
+        function toggleMusic() {
+            if (music.paused) {
+                music.play();
+                musicIcon.textContent = '🔊';
+            } else {
+                music.pause();
+                musicIcon.textContent = '🔇';
+            }
+        }
+
+        // --- টাইপরাইটার ফাংশন (মেসেজ) ---
+        function typeWriter() {
+            let i = 0;
+            const speed = 50; // টাইপিং স্পিড
+            function type() {
+                if (i < messageText.length) {
+                    let char = messageText.charAt(i);
+                    // নতুন লাইন হ্যান্ডেল করা
+                    if (char === '\n') {
+                        typewriter.innerHTML += '<br>';
+                    } else {
+                        typewriter.innerHTML += char;
+                    }
+                    i++;
+                    setTimeout(type, speed);
+                } else {
+                    // শেষে ব্লিংকিং কার্সার সরানো
+                    typewriter.style.borderRight = "none";
+                }
+            }
+            type();
+        }
+
+        // --- কেক মোমবাতি নেভানোর লজিক ---
+        flame.addEventListener('click', blowCandle);
+        flame.addEventListener('mouseover', blowCandle); // মোবাইলে টাচ হবে
+
+        function blowCandle() {
+            if (!flame.classList.contains('blown')) {
+                flame.classList.add('blown');
+                instructionText.textContent = "আপনার সব ইচ্ছা পূরণ হোক! ✨";
+                instructionText.style.color = "#FFD700";
+                instructionText.style.fontWeight = "bold";
+                
+                // আতশবাজির রেট বাড়িয়ে দিন
+                fireworksFrequency = 10; 
+            }
+        }
+
+        // --- আতশবাজি (Fireworks) লজিক ---
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particles = [];
+        let fireworksFrequency = 40;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.velocity = {
+                    x: (Math.random() - 0.5) * 6,
+                    y: (Math.random() - 0.5) * 6
+                };
+                this.alpha = 1;
+                this.friction = 0.96;
+            }
+
+            draw() {
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+
+            update() {
+                this.velocity.x *= this.friction;
+                this.velocity.y *= this.friction;
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                this.alpha -= 0.01;
+                this.draw();
+            }
+        }
+
+        function createFireworks() {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height / 2;
+            const colors = ['#ff007f', '#5e17eb', '#FFD700', '#00d2d3', '#ff9f43'];
+            
+            for (let i = 0; i < 30; i++) {
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                particles.push(new Particle(x, y, color));
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.fillStyle = 'rgba(26, 11, 46, 0.2)'; // ট্রেইল ইফেক্ট
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach((particle, index) => {
+                if (particle.alpha > 0) {
+                    particle.update();
+                } else {
+                    particles.splice(index, 1);
+                }
+            });
+
+            if (Math.random() * 100 < fireworksFrequency) {
+                createFireworks();
+            }
+        }
+
+        function startFireworks() {
+            animate();
+        }
+    </script>
+</body>
+</html>
